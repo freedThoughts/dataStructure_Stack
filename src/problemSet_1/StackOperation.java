@@ -96,6 +96,21 @@ public class StackOperation implements IStackOperation{
         return Math.max(area, (index - lastIndexPoped) * arr[lastIndexPoped]);
     }
 
+    // Time Complexity ~~ O(n^2)
+	// Space Complexity ~~ O(n)
+	@Override
+    public Stack<Integer> sortStack(Stack<Integer> stack){
+		Stack<Integer> resultStack = new Stack<Integer>();
+		while (!stack.isEmpty()) {
+			Integer currentElement = stack.pop();
+			while (!resultStack.isEmpty() && resultStack.peek() < currentElement) {
+				stack.push(resultStack.pop());
+			}
+			resultStack.push(currentElement);
+		}
+		return resultStack;
+	}
+
 	public static void main(String[] args) {
 		StackOperation obj = new StackOperation();
 		//int[] result = obj.findSpans2(new int[]{6,3,4,5,2});

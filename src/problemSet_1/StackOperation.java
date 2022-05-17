@@ -57,6 +57,33 @@ public class StackOperation implements IStackOperation{
 		return span;
 	}
 
+	public int maxHistogramArea2(int[] arr) {
+		int maxArea = 0;
+		Stack<Integer> stack = new Stack<>();
+		for (int i = 0; i < arr.length; i++) {
+			if (stack.isEmpty() || arr[stack.peek()] <= arr[i]) {
+				stack.push(i);
+				continue;
+			}
+
+			while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+				maxArea = Math.max(maxArea, calculateArea(stack.peek(), stack, arr));
+			}
+
+			stack.push(i);
+		}
+
+		while (!stack.isEmpty())
+			maxArea = Math.max(maxArea, calculateArea(stack.peek(), stack, arr));
+		return maxArea;
+
+	}
+
+	private int calculateArea(Integer index, Stack<Integer> stack, int[] arr) {
+		if (stack.isEmpty()) return arr[index] * (index +1);
+		return arr[index] * (index - stack.peek());
+	}
+
 
 	/*
 	    Time complexity - O(2n) ~ O(n)
@@ -114,13 +141,34 @@ public class StackOperation implements IStackOperation{
 	public static void main(String[] args) {
 		StackOperation obj = new StackOperation();
 		//int[] result = obj.findSpans2(new int[]{6,3,4,5,2});
-/*		int[] result = obj.findSpans2(new int[]{100, 80, 60, 70, 60, 75, 85, 110, 60});
+		int[] result = obj.findSpans3(new int[]{100, 80, 60, 70, 60, 75, 85, 110, 60});
 		for(int i = 0; i < result.length; i++)
-			System.out.println(result[i]);*/
-        int[] inputArr = {2, 1, 2, 3, 1};//{1, 2, 4};
-		System.out.println(obj.maxHistogramArea(inputArr));
+			System.out.println(result[i]);
+        //int[] inputArr = {2, 1, 2, 3, 1};//{1, 2, 4};
+		//System.out.println(obj.maxHistogramArea(inputArr));
 
 	}
+
+
+	public int[] findSpans3(int [] stock) {
+		int[] result = new int[stock.length];
+		Stack<Integer> indexStack = new Stack<>();
+		for (int i = 0; i < stock.length; i++) {
+			while (!indexStack.isEmpty() && stock[indexStack.peek()] <= stock[i]) {
+				indexStack.pop();
+			}
+
+			if (indexStack.isEmpty()) {
+				result[i] = i+1;
+			} else {
+				result[i] = i - indexStack.peek();
+			}
+			indexStack.push(i);
+		}
+		return result;
+	}
+
+
 
 }
 
